@@ -18,9 +18,11 @@
 #include <bitset>
 #include <stack>
 
+// Constants for enum range
 const int enum_min = -127;
 const int enum_max = 127;
 
+// Structure to hold parameters for print
 struct Params {
     std::string sep = " ";
     std::string end = "\n";
@@ -32,6 +34,7 @@ template<typename T>
 struct isSequenceContainer : public std::false_type {
 };
 
+// Specializations for different sequence container types
 template<typename T>
 struct isSequenceContainer<std::vector<T>> : public std::true_type {
 };
@@ -55,9 +58,16 @@ struct isSequenceContainer<std::forward_list<T>> : public std::true_type {
 template<typename T, std::size_t N>
 struct isSequenceContainer<T[N]> : public std::true_type {
 };
+template<typename T, std::size_t N>
+struct isSequenceContainer<T[N]> : public std::true_type {
+};
 
 
 // Check if it is a map container
+template<typename T>
+struct isMapContainer : public std::false_type {
+};
+// Template metaprogramming to check if a type is a map container
 template<typename T>
 struct isMapContainer : public std::false_type {
 };
@@ -65,7 +75,14 @@ struct isMapContainer : public std::false_type {
 template<typename K, typename V>
 struct isMapContainer<std::map<K, V>> : public std::true_type {
 };
+// Specializations for different map container types
+template<typename K, typename V>
+struct isMapContainer<std::map<K, V>> : public std::true_type {
+};
 
+template<typename K, typename V>
+struct isMapContainer<std::multimap<K, V>> : public std::true_type {
+};
 template<typename K, typename V>
 struct isMapContainer<std::multimap<K, V>> : public std::true_type {
 };
@@ -73,12 +90,18 @@ struct isMapContainer<std::multimap<K, V>> : public std::true_type {
 template<typename K, typename V>
 struct isMapContainer<std::unordered_map<K, V>> : public std::true_type {
 };
+template<typename K, typename V>
+struct isMapContainer<std::unordered_map<K, V>> : public std::true_type {
+};
 
 template<typename K, typename V>
 struct isMapContainer<std::unordered_multimap<K, V>> : public std::true_type {
 };
+template<typename K, typename V>
+struct isMapContainer<std::unordered_multimap<K, V>> : public std::true_type {
+};
 
-// Check if it is a set container
+// Template metaprogramming to check if a type is a set container
 template<typename T>
 struct isSetContainer : public std::false_type {
 };
@@ -99,7 +122,7 @@ template<typename K, typename V>
 struct isSetContainer<std::unordered_multiset<K, V>> : public std::true_type {
 };
 
-//concept
+// Defining concepts for cleaner template syntax
 template<typename T>
 concept Iterable = isSequenceContainer<T>::value;
 
@@ -115,7 +138,7 @@ concept Ptr = std::is_pointer<T>::value ||
               std::is_same<T, std::shared_ptr<typename T::element_type>>::value ||
               std::is_same<T, std::weak_ptr<typename T::element_type>>::value;
 
-
+// Forward declarations of print functions
 template<typename T>
 void _print(const T &obj, std::ostream &out);
 
@@ -371,3 +394,4 @@ void print(Params params, const Args &... args) {
 
 
 #endif //PRINT_PRINT_H
+
